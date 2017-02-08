@@ -15,9 +15,9 @@ import networkx as nx
 from node2vec import base_algorithm
 from gensim.models import Word2Vec
 
-def parse_args():
+def get_parser():
     '''
-    Parses the node2vec arguments.
+    Create a parser for the node2vec arguments.
     '''
     parser = argparse.ArgumentParser(description="Run node2vec.")
 
@@ -61,7 +61,7 @@ def parse_args():
     parser.add_argument('--undirected', dest='undirected', action='store_false')
     parser.set_defaults(directed=False)
 
-    return parser.parse_args()
+    return parser
 
 def read_graph(args):
     '''
@@ -93,7 +93,9 @@ def main(args=None):
     '''
     Pipeline for representational learning for all nodes in a graph.
     '''
-    if args is None: args = parse_args()
+    if args is None: 
+        parser = get_parser()
+        args = parser.parse_args()
     nx_G = read_graph(args)
     G = base_algorithm.Graph(nx_G, args.directed, args.p, args.q)
     G.preprocess_transition_probs()
